@@ -53,7 +53,7 @@ pipeline {
         stage('DAST') {
         steps {
             figlet 'DAST'
-            //sh "${DOCKER_EXEC} run --rm -v ${WORKSPACE}:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t https://www.hackthissite.org/ -r DAST_Report.html"
+            sh "${DOCKER_EXEC} run --rm -v ${WORKSPACE}:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://localhost -r DAST_Report.html"
         }
      }
         
