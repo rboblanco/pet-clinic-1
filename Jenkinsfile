@@ -54,6 +54,7 @@ pipeline {
         steps {
             figlet 'DAST'
             sh "${DOCKER_EXEC} run --rm -v ${WORKSPACE}:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://localhost -r DAST_Report.html"
+            //sh "${DOCKER_EXEC} run --rm -v ${WORKSPACE}:/zap/wrk/:rw -t owasp/zap2docker-stable zap-api-scan.py -t http://localhost/api-docs -f openapi -r DAST_Report.html"
         }
      }
         
