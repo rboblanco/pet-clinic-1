@@ -4,6 +4,7 @@ pipeline {
        DOCKER = tool 'docker' 
        DOCKER_EXEC = '$DOCKER/docker'
        SCA = '/Users/clagosu/Documents/dependency-check/bin/dependency-check.sh'
+       TRIVY = '/Users/clagosu/Documents/trivy_0.29.2_macOS-64bit/trivy'
     }
     stages {
       
@@ -43,9 +44,9 @@ pipeline {
         
       stage('Build Image') {
          steps {
-            figlet 'IMAGE'
-          //sh '${DOCKER EXEC} build .'
-            //sh "$DOCKER_EXEC images"
+            figlet 'BUILD IMAGE'
+            sh "$DOCKER_EXEC build . -t clagosu/pet-clinic:$currentBuild.number"
+            sh "$TRIVY image clagosu/pet-clinic:$currentBuild.number"
           //sh "$DOCKER_EXEC push clagosu/spring-clinic:$currentBuild.number"
             }
         }
