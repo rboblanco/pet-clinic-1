@@ -101,7 +101,7 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Docker'
-      repository: 'clagosu/microservicio-spring'
+      repository: 'clagosu/pet-clinic'
       command: 'build'
       Dockerfile: '**/Dockerfile'
       tags: latest
