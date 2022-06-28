@@ -121,6 +121,32 @@ jobs:
       repository: 'clagosu/pet-clinic'
       command: 'push'
       tags: 'latest'
+
 - job: Deployment
   steps:
-  - task: 
+  #- task: KubernetesManifest@0
+  #  inputs:
+  #    action: 'deploy'
+  #    kubernetesServiceConnection: 'Kubernetes'
+  #    namespace: 'default'
+  #    manifests: 'deployment-app.yaml'
+  - task: KubectlInstaller@0
+    inputs:
+      kubectlVersion: 'latest'
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes'
+      namespace: 'default'
+      command: 'login'
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes'
+      namespace: 'default'
+      command: 'apply'
+      arguments: '-f config/deployment-app.yaml'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
+      azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
