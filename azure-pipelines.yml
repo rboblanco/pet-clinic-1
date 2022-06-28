@@ -206,7 +206,7 @@ stages:
     steps:     
     - script: |
         docker pull owasp/zap2docker-stable
-        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $(getip.appDeploy) -r DAST.html 
+        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://20.206.197.95:8085 -r DAST.html 
       continueOnError: true
       displayName: DAST OWASP ZAP
     
