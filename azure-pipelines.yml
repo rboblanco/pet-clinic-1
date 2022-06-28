@@ -94,18 +94,6 @@ stages:
         artifactName: 'appJar'
         downloadPath: '$(Pipeline.Workspace)'
       displayName: Descarga Jar
-
-    - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"  
-      displayName:  Se mueve jar a carpeta raiz
-    
-  - job: Docker
-    dependsOn: buildimage
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Docker'
-        command: 'login'
-      displayName: Docker registry login
     
     - task: Docker@2
       inputs:
@@ -115,14 +103,23 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: latest
       displayName: Build Image
+    
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Docker'
+        command: 'login'
+      displayName: Docker registry login
 
+    - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"  
+      displayName:  Se mueve jar a carpeta raiz
+    
     - script: | 
        sudo apt-get install -y rpm
        wget https://github.com/aquasecurity/trivy/releases/download/v0.27.1/trivy_0.27.1_Linux-64bit.deb
        sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
        trivy image clagosu/pet-clinic:latest
       displayName: Image Scan
-  
+    
     - task: Docker@2
       displayName: Docker push
       inputs:
@@ -132,6 +129,7 @@ stages:
         tags: 'latest'
 
   - job: Kubernetes
+    displayName: Deploy
     steps:
   #- task: KubernetesManifest@0
   #  inputs:
@@ -150,6 +148,7 @@ stages:
         kubernetesServiceEndpoint: 'Kubernetes'
         namespace: 'default'
         command: 'login'
+      displayName: AKS Login
 
     - task: Kubernetes@1
       inputs:
@@ -161,3 +160,4 @@ stages:
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
         azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
+      displayName: AKS deploy
