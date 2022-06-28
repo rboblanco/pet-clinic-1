@@ -139,24 +139,25 @@ stages:
   #    kubernetesServiceConnection: 'Kubernetes'
   #    namespace: 'default'
   #    manifests: 'deployment-app.yaml'
-      - task: KubectlInstaller@0
-        inputs:
-          kubectlVersion: 'latest'
+    
+    - task: KubectlInstaller@0
+      inputs:
+        kubectlVersion: 'latest'
       
-      - task: Kubernetes@1
-        inputs:
-          connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'Kubernetes'
-          namespace: 'default'
-          command: 'login'
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes'
+        namespace: 'default'
+        command: 'login'
 
-      - task: Kubernetes@1
-        inputs:
-          connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceEndpoint: 'Kubernetes'
-          namespace: 'default'
-          command: 'apply'
-          arguments: '-f kubernetes/deployment-app.yaml'
-          secretType: 'dockerRegistry'
-          containerRegistryType: 'Azure Container Registry'
-          azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes'
+        namespace: 'default'
+        command: 'apply'
+        arguments: '-f kubernetes/deployment-app.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
