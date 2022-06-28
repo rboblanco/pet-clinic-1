@@ -101,7 +101,9 @@ stages:
     steps:     
     - script: |
         docker pull owasp/zap2docker-stable
-        appURL=$(getip.appDeploy)
+        appURL=echo $(getip.appDeploy)
+        echo $appURL
+        echo $(getip.appDeploy)
         docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $appURL -r DAST.html 
       continueOnError: true
       displayName: DAST OWASP ZAP
