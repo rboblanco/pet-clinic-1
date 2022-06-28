@@ -131,8 +131,7 @@ stages:
         command: 'push'
         tags: 'latest'
 
-  - job: Deployment
-    dependsOn: buildimage
+  - job: Kubernetes
     steps:
   #- task: KubernetesManifest@0
   #  inputs:
