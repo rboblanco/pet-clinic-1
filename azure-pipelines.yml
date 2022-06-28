@@ -166,6 +166,7 @@ stages:
         arguments: 'deployment petclinic-deployment --type=LoadBalancer --name=pet-clinic'
         secretType: 'dockerRegistry'
         containerRegistryType: 'Azure Container Registry'
+      continueOnError: true
     
     - script: |
           ipApp=$(kubectl get services pet-clinic --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -177,6 +178,8 @@ stages:
         ZapApiKey: 'test'
         TargetUrl: '$URLApp'
         ExecuteSpiderScan: true
+      continueOnError: true
+      
     - script: |
         docker pull owasp/zap2docker-stable
         docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $URLApp -r DAST.html 
