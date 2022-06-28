@@ -155,9 +155,10 @@ stages:
     - script: | 
        sudo apt-get install -y rpm
        wget https://github.com/aquasecurity/trivy/releases/download/v0.29.2/trivy_0.29.2_Linux-64bit.deb
-       sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
+       sudo dpkg -i trivy_0.29.2_Linux-64bit.deb
        trivy k8s --report=summary cluster
       displayName: Kubernetes Scan 
+      
     - task: Kubernetes@1
       inputs:
         connectionType: 'Kubernetes Service Connection'
