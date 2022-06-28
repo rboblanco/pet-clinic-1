@@ -86,7 +86,6 @@ stages:
   jobs:  
   - job: buildimage
     displayName:  Build Image
-    dependsOn: build
     steps:
     - task: DownloadBuildArtifacts@0
       inputs:
