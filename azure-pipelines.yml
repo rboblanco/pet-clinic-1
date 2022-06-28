@@ -156,3 +156,27 @@ stages:
         containerRegistryType: 'Azure Container Registry'
         azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
       displayName: AKS deploy
+    
+    - task: Kubernetes@1
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'Kubernetes'
+        namespace: 'default'
+        command: 'expose'
+        arguments: 'deployment petclinic-deployment --type=LoadBalancer --name=pet-clinic'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+    
+    - script: |
+          ipApp=$(kubectl get services pet-clinic --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo $ipApp
+          URLApp=http://$ipApp:8085 
+    - task: OwaspZapScan@2
+      inputs:
+        ZapApiUrl: 'test.com'
+        ZapApiKey: 'test'
+        TargetUrl: '$URLApp'
+        ExecuteSpiderScan: true
+    - script: |
+        docker pull owasp/zap2docker-stable
+        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $URLApp -r DAST.html 
