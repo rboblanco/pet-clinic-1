@@ -98,6 +98,13 @@ stages:
     - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"  
       displayName:  Se mueve JAR a carpeta raiz
     
+    - script: | 
+       sudo apt-get install -y rpm
+       wget https://github.com/aquasecurity/trivy/releases/download/v0.27.1/trivy_0.27.1_Linux-64bit.deb
+       sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
+       trivy config $(Pipeline.Workspace)
+      displayName: Kubernetes YAML Scan
+ 
     - task: Docker@2
       inputs:
         containerRegistry: 'Docker'
@@ -144,7 +151,13 @@ stages:
         namespace: 'default'
         command: 'login'
       displayName: AKS Login
-
+    
+    - script: | 
+       sudo apt-get install -y rpm
+       wget https://github.com/aquasecurity/trivy/releases/download/v0.27.1/trivy_0.27.1_Linux-64bit.deb
+       sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
+       trivy k8s --report=summary cluster
+      displayName: Kubernetes Scan 
     - task: Kubernetes@1
       inputs:
         connectionType: 'Kubernetes Service Connection'
