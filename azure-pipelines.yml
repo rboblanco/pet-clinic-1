@@ -51,13 +51,6 @@ stages:
         namespace: 'default'
         command: 'login'
       displayName: AKS Login
-    
-    - script: | 
-       sudo apt-get install -y rpm
-       wget https://github.com/aquasecurity/trivy/releases/download/v0.29.2/trivy_0.29.2_Linux-64bit.deb
-       sudo dpkg -i trivy_0.29.2_Linux-64bit.deb
-       trivy k8s --report=summary cluster
-      displayName: Kubernetes Scan 
       
     - task: Kubernetes@1
       inputs:
@@ -92,7 +85,7 @@ stages:
       name: getip
       displayName: Get IP
     
-    - script: echo $(getip.appDeploy)
+    - script: echo $(getip.appDeploy) 
 
     #- task: OwaspZapScan@2
     #  inputs:
@@ -108,7 +101,8 @@ stages:
     steps:     
     - script: |
         docker pull owasp/zap2docker-stable
-        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $(getip.appDeploy) -r DAST.html 
+        appURL=$(getip.appDeploy)
+        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $appURL -r DAST.html 
       continueOnError: true
       displayName: DAST OWASP ZAP
     
