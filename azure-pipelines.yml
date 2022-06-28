@@ -104,7 +104,13 @@ stages:
        sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
        trivy config $(Pipeline.Workspace)
       displayName: Kubernetes YAML Scan
- 
+    
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Docker'
+        command: 'login'
+      displayName: Docker registry login
+    
     - task: Docker@2
       inputs:
         containerRegistry: 'Docker'
@@ -113,12 +119,6 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: latest
       displayName: Build Image
-    
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Docker'
-        command: 'login'
-      displayName: Docker registry login
     
     - script: | 
        sudo apt-get install -y rpm
@@ -138,7 +138,7 @@ stages:
   - job: Kubernetes
     displayName: Deploy
     steps:
-  
+
     - task: KubectlInstaller@0
       inputs:
         kubectlVersion: 'latest'
@@ -154,7 +154,7 @@ stages:
     
     - script: | 
        sudo apt-get install -y rpm
-       wget https://github.com/aquasecurity/trivy/releases/download/v0.27.1/trivy_0.27.1_Linux-64bit.deb
+       wget https://github.com/aquasecurity/trivy/releases/download/v0.29.2/trivy_0.29.2_Linux-64bit.deb
        sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
        trivy k8s --report=summary cluster
       displayName: Kubernetes Scan 
@@ -197,7 +197,7 @@ stages:
     #  continueOnError: true
 - stage: DAST 
   jobs: 
-  - job: dast
+  - job: DAST
     steps:     
     - script: |
         docker pull owasp/zap2docker-stable
