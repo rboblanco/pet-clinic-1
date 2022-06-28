@@ -6,15 +6,15 @@ stages:
   - job: build
     displayName: 'Build'
     steps:
-    #- task: Gradle@3
-    #  inputs:
-    #    gradleWrapperFile: 'gradlew'
-    #    tasks: 'build'
-    #    publishJUnitResults: true
-    #    testResultsFiles: '**/TEST-*.xml'
-    #    javaHomeOption: 'JDKVersion'
-    #    sonarQubeRunAnalysis: false
-    #    spotBugsAnalysis: false
+    - task: Gradle@3
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        tasks: 'build'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        sonarQubeRunAnalysis: false
+        spotBugsAnalysis: false
 
     - task: CopyFiles@2
       inputs:
@@ -23,11 +23,11 @@ stages:
             **/build/libs/*.jar
         targetFolder: '$(Build.ArtifactStagingDirectory)'
 
-    #- task: PublishBuildArtifacts@1
-    #  inputs:
-    #    pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    #    artifactName: appJar
-    #    publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: appJar
+        publishLocation: 'Container'
 
 #- job: horusec
 #  workspace:
@@ -73,14 +73,14 @@ stages:
   #    SonarCloud: 'Sonarcloud'
   #    organization: 'devsecops-usach'
 
-#  - job: sca
-#    steps:
-#    - task: dependency-check-build-task@6
-#      inputs:
-#        projectName: 'pet-clinic'
-#        scanPath: '$(Pipeline.Workspace)'
-#        format: 'HTML'
-#      displayName: SCA
+  - job: sca
+    steps:
+    - task: dependency-check-build-task@6
+      inputs:
+        projectName: 'pet-clinic'
+        scanPath: '$(Pipeline.Workspace)'
+        format: 'HTML'
+      displayName: SCA
     
 - stage: Deploy 
   jobs:  
@@ -181,10 +181,10 @@ stages:
     #    ExecuteSpiderScan: true
     #  continueOnError: true
       
-    #- script: |
-    #    docker pull owasp/zap2docker-stable
-    #    docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://20.206.197.95:8085 -r DAST.html 
-    #  continueOnError: true
+    - script: |
+        docker pull owasp/zap2docker-stable
+        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $URLApp -r DAST.html 
+      continueOnError: true
     
     - script: |
         docker pull aquasec/kube-hunter:aqua
