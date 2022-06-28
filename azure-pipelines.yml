@@ -37,7 +37,8 @@ stages:
 #    - script: |
 #        curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
 #        horusec start -p ./src   
-
+- stage: Test 
+  jobs:
   - job: sonar
     workspace:
       clean: all
@@ -79,7 +80,10 @@ stages:
         projectName: 'pet-clinic'
         scanPath: '$(Pipeline.Workspace)'
         format: 'HTML'
-  
+      displayName: SCA
+    
+- stage: Deploy 
+  jobs:  
   - job: buildimage
     displayName:  Build Image
     dependsOn: build
@@ -90,6 +94,7 @@ stages:
         downloadType: 'single'
         artifactName: 'appJar'
         downloadPath: '$(Pipeline.Workspace)'
+      displayName: Descarga Jar
 
     - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"  
       displayName:  Se mueve jar a carpeta raiz
