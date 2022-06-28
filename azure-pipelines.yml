@@ -98,7 +98,9 @@ stages:
 
     - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"  
       displayName:  Se mueve jar a carpeta raiz
-
+    
+  - job: Docker
+    steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'Docker'
