@@ -150,7 +150,7 @@ stages:
           kubernetesServiceEndpoint: 'Kubernetes'
           namespace: 'default'
           command: 'apply'
-          arguments: '-f config/deployment-app.yaml'
+          arguments: '-f kubernetes/deployment-app.yaml'
           secretType: 'dockerRegistry'
           containerRegistryType: 'Azure Container Registry'
           azureSubscriptionEndpointForSecrets: 'azure(9909fced-8203-44b6-af68-11f833a37e60)'
