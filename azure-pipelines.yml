@@ -113,3 +113,14 @@ jobs:
      sudo dpkg -i trivy_0.27.1_Linux-64bit.deb
      trivy image clagosu/pet-clinic:latest
     displayName: Image Scan
+  
+  - task: Docker@2
+    displayName: Docker push
+    inputs:
+      containerRegistry: 'Docker'
+      repository: 'clagosu/pet-clinic'
+      command: 'push'
+      tags: 'latest'
+- job: Deployment
+  steps:
+  - task: 
