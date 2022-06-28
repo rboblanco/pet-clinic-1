@@ -171,15 +171,19 @@ stages:
     - script: |
           ipApp=$(kubectl get services pet-clinic --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo $ipApp
-          URLApp=http://$ipApp:8085 
+          URLApp=http://$ipApp:8085
+          echo $URLApp
     - task: OwaspZapScan@2
       inputs:
         ZapApiUrl: 'test.com'
         ZapApiKey: 'test'
-        TargetUrl: '$URLApp'
+        TargetUrl: 'http://20.206.197.95:8085'
         ExecuteSpiderScan: true
       continueOnError: true
       
     - script: |
         docker pull owasp/zap2docker-stable
-        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t $URLApp -r DAST.html 
+        docker run --rm -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://20.206.197.95:8085 -r DAST.html 
+    - script: |
+        docker pull aquasec/kube-hunter:aqua
+        docker run -it --rm --network aks-getting-started-ae3967d2.hcp.brazilsouth.azmk8s.io aquasec/kube-hunter:aqua --token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0aW1lIjoxNjU2MzgzMDAzLjM5NDI0NzgsImVtYWlsIjoiY2xhZ29zMzUzQGdtYWlsLmNvbSIsInIiOiI5NWE3NmY1ZCJ9.TGSvUuNe0W2AGj4IqxzgZyjXXyi_WwlyvubS3K8Tpow
