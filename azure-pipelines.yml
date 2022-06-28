@@ -123,6 +123,7 @@ jobs:
       tags: 'latest'
 
 - job: Deployment
+  dependsOn: buildimage
   steps:
   #- task: KubernetesManifest@0
   #  inputs:
