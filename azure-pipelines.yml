@@ -99,6 +99,7 @@ stages:
       displayName:  Se mueve jar a carpeta raiz
     
   - job: Docker
+    dependsOn: buildimage
     steps:
     - task: Docker@2
       inputs:
