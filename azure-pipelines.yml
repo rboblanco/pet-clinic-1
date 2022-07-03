@@ -17,8 +17,6 @@ stages:
         spotBugsAnalysis: false          
 
   
-- stage: Test 
-  jobs:
   - job: sonar
     workspace:
       clean: all
@@ -26,8 +24,8 @@ stages:
     steps:
       - task: SonarCloudPrepare@1
         inputs:
-          SonarCloud: 'Sonarcloud'
-          organization: 'devsecops-usach'
+          SonarCloud: 'tarea-devsecops'
+          organization: 'rboblanco'
           projectKey: 'DevSecOps-USACH_spring-clinic'
           projectName: 'spring-clinic'
         displayName: 'Preparing Sonarqube Environment'
