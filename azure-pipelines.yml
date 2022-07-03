@@ -26,8 +26,8 @@ stages:
         inputs:
           SonarCloud: 'tarea-devsecops'
           organization: 'rboblanco'
-          projectKey: 'DevSecOps-USACH_spring-clinic'
-          projectName: 'spring-clinic'
+          projectKey: 'rboblanco_pet-clinic-1'
+          projectName: 'pet-clinic-1'
         displayName: 'Preparing Sonarqube Environment'
     
       - task: Gradle@3
